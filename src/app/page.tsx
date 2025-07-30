@@ -45,7 +45,7 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)]">
-      <section className="relative w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-950 dark:to-purple-950">
+      <section className="flex justify-center items-center w-full py-12 md:py-24 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-950 dark:to-purple-950 text-white">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
             <motion.div
@@ -67,7 +67,7 @@ export default function HomePage() {
                 <Button asChild size="lg">
                   <Link href="/reservation">Objednať sa</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg">
+                <Button asChild variant="outline" size="lg" className="text-black">
                   <Link href="/services">Zobraziť služby</Link>
                 </Button>
               </div>
@@ -76,7 +76,7 @@ export default function HomePage() {
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative h-[300px] w-full lg:h-[400px] xl:h-[500px]"
+              className="relative min-h-[300px] w-full lg:min-h-[400px] xl:min-h-[500px]"
             >
               <Image
                 src="/placeholder.svg?height=500&width=600"

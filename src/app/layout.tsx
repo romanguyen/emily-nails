@@ -24,7 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <SiteHeader />
-          <main className="flex-1">{children}</main>
+          <main className="h-full w-full">{children}</main>
           <SiteFooter />
         </ThemeProvider>
       </body>
