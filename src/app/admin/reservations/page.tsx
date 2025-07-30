@@ -21,7 +21,6 @@ export default function ManageReservationsPage() {
   const filteredReservations = useMemo(() => {
     return allReservations.filter((reservation) => {
       const reservationDate = parseISO(reservation.date)
-      const now = new Date()
 
       // Filter by status
       if (filterStatus !== "all" && reservation.status !== filterStatus) {

@@ -84,7 +84,7 @@ export function MultiStepReservationForm() {
       }
     }
     return disabled
-  }, [allReservations, serviceDuration])
+  }, [serviceDuration])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target
