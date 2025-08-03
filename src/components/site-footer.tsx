@@ -6,7 +6,7 @@ export function SiteFooter() {
     <footer className="border-t py-8 md:py-12">
       <div className="container flex flex-col items-center justify-between gap-4 px-4 md:flex-row md:px-6">
         <div className="flex items-center gap-2 font-bold text-lg">
-          <Sparkles className="h-6 w-6 text-pink-500" />
+          <Sparkles className="h-6 w-6 text-primary" />
           <span>Emily Nails</span>
         </div>
         <nav className="flex flex-wrap justify-center gap-4 text-sm md:gap-6">

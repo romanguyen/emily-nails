@@ -145,7 +145,7 @@ export function MultiStepReservationForm() {
     return (
       <Card className="w-full max-w-2xl mx-auto text-center py-12">
         <CardHeader>
-          <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+          <CheckCircle className="h-16 w-16 text-primary mx-auto mb-4" />
           <CardTitle className="text-3xl font-bold">Rezervácia potvrdená!</CardTitle>
           <CardDescription>Ďakujeme za vašu rezerváciu. Čoskoro vám pošleme potvrdzujúci e-mail.</CardDescription>
         </CardHeader>

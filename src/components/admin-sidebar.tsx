@@ -74,7 +74,7 @@ export function AdminSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <Sparkles className="h-5 w-5 text-pink-500" />
+                  <Sparkles className="h-5 w-5 text-primary" />
                   <span>Emily Nails</span>
                   <ChevronDown className="ml-auto" />
                 </SidebarMenuButton>
