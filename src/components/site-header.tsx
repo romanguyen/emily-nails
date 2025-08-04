@@ -60,7 +60,7 @@ export function SiteHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
-              <div className="grid gap-4 py-6">
+              <div className="grid gap-4 p-4">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}

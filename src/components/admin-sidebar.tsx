@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Sidebar,
@@ -13,7 +13,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import {
   Home,
   CalendarCheck,
@@ -25,18 +25,26 @@ import {
   ChevronDown,
   User2,
   ChevronUp,
-} from "lucide-react"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { useSidebar } from "@/components/ui/sidebar";
 
 export function AdminSidebar() {
-  const pathname = usePathname()
-  const router = useRouter()
+  const pathname = usePathname();
+  const router = useRouter();
+  const { state } = useSidebar();
 
   const handleLogout = () => {
-    router.push("/logout")
-  }
+    router.push("/logout");
+  };
 
   const adminMenuItems = [
     {
@@ -64,19 +72,28 @@ export function AdminSidebar() {
       href: "/admin/settings",
       icon: Settings,
     },
-  ]
+  ];
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar
+      collapsible="icon"
+      className={`${state === "expanded" ? "w-60" : "w-16"} transition-all duration-300 ease-in-out`}
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <Sparkles className="h-5 w-5 text-primary" />
-                  <span>Emily Nails</span>
-                  <ChevronDown className="ml-auto" />
+                  <Sparkles className="h-4 w-4 text-primary" />
+                  <span
+                    className={`${state === "collapsed" ? "hidden" : "block"}`}
+                  >
+                    Emily Nails
+                  </span>
+                  <ChevronDown
+                    className={`ml-auto ${state === "collapsed" ? "hidden" : "block"}`}
+                  />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
@@ -119,12 +136,17 @@ export function AdminSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> <span>Administrátor</span>
+                  <User2 className="h-4 w-4" /> <span>Administrátor</span>
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                <DropdownMenuItem onClick={() => router.push("/admin/settings")}>
+              <DropdownMenuContent
+                side="top"
+                className="w-[--radix-popper-anchor-width]"
+              >
+                <DropdownMenuItem
+                  onClick={() => router.push("/admin/settings")}
+                >
                   <span>Nastavenia profilu</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout}>
@@ -134,9 +156,11 @@ export function AdminSidebar() {
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
+          <SidebarMenuItem className="hidden md:block">
+            <SidebarTrigger />
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
-      <SidebarTrigger />
     </Sidebar>
-  )
+  );
 }
