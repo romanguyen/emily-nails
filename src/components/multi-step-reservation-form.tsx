@@ -4,13 +4,6 @@ import type React from "react";
 
 import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -22,8 +15,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
-import { format, isSameDay, addDays, parseISO } from "date-fns"; // Removed CalendarIcon, Popover imports
-import { CheckCircle } from "lucide-react"; // Removed CalendarIcon
+import { format, isSameDay, addDays, parseISO } from "date-fns";
+import { CheckCircle } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   allReservations,
@@ -180,36 +173,34 @@ export function MultiStepReservationForm() {
 
   if (isSubmitted) {
     return (
-      <Card className="w-full max-w-2xl mx-auto text-center py-12">
-        <CardHeader>
+      <div className="w-full max-w-2xl mx-auto text-center py-12">
+        <div className="mb-4">
           <CheckCircle className="h-16 w-16 text-primary mx-auto mb-4" />
-          <CardTitle className="text-3xl font-bold">
-            Rezervácia potvrdená!
-          </CardTitle>
-          <CardDescription>
+          <h1 className="text-3xl font-bold">Rezervácia potvrdená!</h1>
+          <p className="text-muted-foreground">
             Ďakujeme za vašu rezerváciu. Čoskoro vám pošleme potvrdzujúci
             e-mail.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </p>
+        </div>
+        <div>
           <Button onClick={() => window.location.reload()}>
             Vytvoriť novú rezerváciu
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle className="text-3xl font-bold">Objednať sa</CardTitle>
-        <CardDescription>Krok {currentStep} z 3</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <div className="w-full">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold">Objednať sa</h1>
+        <p className="text-muted-foreground">Krok {currentStep} z 3</p>
+      </div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <form onSubmit={handleSubmit}>
           {currentStep === 1 && (
-            <div className="grid gap-6">
+            <div className="grid gap-6 max-w-xl mx-auto">
               <div className="grid gap-2">
                 <Label htmlFor="name">Celé meno</Label>
                 <Input
@@ -272,8 +263,6 @@ export function MultiStepReservationForm() {
           {currentStep === 2 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex flex-col gap-4 items-center">
-                {" "}
-                {/* Centered calendar */}
                 <Label htmlFor="date">Dátum</Label>
                 <Calendar
                   mode="single"
@@ -296,20 +285,8 @@ export function MultiStepReservationForm() {
                       color: "hsl(var(--accent-foreground))",
                     },
                   }}
-                  className="rounded-md border" // Added border and rounded-md for consistent styling
+                  className="rounded-md border"
                 />
-                <div className="grid gap-2 w-full mt-4">
-                  {" "}
-                  {/* Moved notes here, full width */}
-                  <Label htmlFor="notes">Ďalšie poznámky (voliteľné)</Label>
-                  <Textarea
-                    id="notes"
-                    placeholder="Akékoľvek špecifické požiadavky alebo preferencie?"
-                    className="min-h-[100px]"
-                    value={formData.notes}
-                    onChange={handleInputChange}
-                  />
-                </div>
               </div>
 
               <div className="flex flex-col gap-4">
@@ -363,7 +340,7 @@ export function MultiStepReservationForm() {
           )}
 
           {currentStep === 3 && (
-            <div className="grid gap-6">
+            <div className="grid gap-6 max-w-xl mx-auto">
               <h2 className="text-2xl font-bold text-center">
                 Potvrďte vašu rezerváciu
               </h2>
@@ -401,6 +378,16 @@ export function MultiStepReservationForm() {
                   </div>
                 )}
               </div>
+              <div className="grid gap-2 w-full mt-4">
+                <Label htmlFor="notes">Ďalšie poznámky (voliteľné)</Label>
+                <Textarea
+                  id="notes"
+                  placeholder="Akékoľvek špecifické požiadavky alebo preferencie?"
+                  className="min-h-[100px]"
+                  value={formData.notes}
+                  onChange={handleInputChange}
+                />
+              </div>
               <div className="flex justify-between mt-4">
                 <Button
                   type="button"
@@ -414,7 +401,7 @@ export function MultiStepReservationForm() {
             </div>
           )}
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
