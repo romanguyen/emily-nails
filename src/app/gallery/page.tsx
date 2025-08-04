@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import { motion } from "framer-motion"
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function GalleryPage() {
   const images = [
-    { src: "/placeholder.svg?height=400&width=600", alt: "Gélové nechty - umenie" },
-    { src: "/placeholder.svg?height=400&width=600", alt: "Dizajn akrylových nechtov" },
-    { src: "/placeholder.svg?height=400&width=600", alt: "Spa pedikúra" },
-    { src: "/placeholder.svg?height=400&width=600", alt: "Klasická manikúra" },
-    { src: "/placeholder.svg?height=400&width=600", alt: "Interiér salónu" },
-    { src: "/placeholder.svg?height=400&width=600", alt: "Výklad lakov" },
-    { src: "/placeholder.svg?height=400&width=600", alt: "Ombre nechty" },
-    { src: "/placeholder.svg?height=400&width=600", alt: "Francúzska manikúra" },
-    { src: "/placeholder.svg?height=400&width=600", alt: "Technik pri práci" },
-  ]
+    { src: "/logo.jpg", alt: "Technik pri práci" },
+    { src: "/nails_01.jpg", alt: "Gélové nechty - umenie" },
+    { src: "/nails_02.jpg", alt: "Dizajn akrylových nechtov" },
+    { src: "/nails_03.jpg", alt: "Spa pedikúra" },
+    { src: "/nails_04.jpg", alt: "Klasická manikúra" },
+    { src: "/nails_05.jpg", alt: "Interiér salónu" },
+    { src: "/nails_01.jpg", alt: "Výklad lakov" },
+    { src: "/nails_02.jpg", alt: "Ombre nechty" },
+    { src: "/nails_03.jpg", alt: "Francúzska manikúra" },
+  ];
 
   const fadeInAnimationVariants = {
     initial: {
@@ -28,16 +28,19 @@ export default function GalleryPage() {
         delay: 0.05 * index,
       },
     }),
-  }
+  };
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">Naša galéria</h1>
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+              Naša galéria
+            </h1>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Preskúmajte našu zbierku krásneho nechtového umenia, interiéru salónu a spokojných klientov.
+              Preskúmajte našu zbierku krásneho nechtového umenia, interiéru
+              salónu a spokojných klientov.
             </p>
           </div>
         </div>
@@ -60,7 +63,9 @@ export default function GalleryPage() {
                   className="aspect-[3/2] w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <span className="text-white text-lg font-semibold">{image.alt}</span>
+                  <span className="text-white text-lg font-semibold">
+                    {image.alt}
+                  </span>
                 </div>
               </div>
             </motion.div>
@@ -68,5 +73,5 @@ export default function GalleryPage() {
         </div>
       </div>
     </section>
-  )
+  );
 }

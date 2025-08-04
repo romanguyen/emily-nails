@@ -1,33 +1,34 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Clock, MapPin, Phone } from "lucide-react"
-import { motion } from "framer-motion"
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Clock, MapPin, Phone } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function HomePage() {
   const featuredServices = [
     {
       name: "Klasická manikúra",
-      description: "Tvarovanie nechtov, starostlivosť o kožičku, masáž a lakovanie.",
+      description:
+        "Tvarovanie nechtov, starostlivosť o kožičku, masáž a lakovanie.",
       price: "$25",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/nails_02.jpg",
     },
     {
       name: "Gélová pedikúra",
       description: "Kúpeľ nôh, exfoliácia, masáž a dlhotrvajúci gélový lak.",
       price: "$50",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/nails_03.jpg",
     },
     {
       name: "Akrylové nechty - kompletná sada",
       description: "Odolné akrylové predĺženie pre dokonalý vzhľad.",
       price: "$65",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/nails_04.jpg",
     },
-  ]
+  ];
 
   const fadeInAnimationVariants = {
     initial: {
@@ -41,11 +42,12 @@ export default function HomePage() {
         delay: 0.05 * index,
       },
     }),
-  }
+  };
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)]">
-      <section className="flex justify-center items-center w-full py-12 md:py-24 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-950 dark:to-purple-950 text-white">
+      <section className="flex justify-center items-center w-full py-12 md:py-24 bg-gradient-to-r from-[var(--secondary)] via-[var(--accent)] to-[var(--primary)] dark:from-black dark:via-[var(--chart-4)] dark:to-[var(--sidebar-primary)] text-[var(--foreground)] dark:text-[var(--foreground)]">
+        {/* <section className="flex justify-center items-center w-full py-12 md:py-24 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-950 dark:to-purple-950 text-white"> */}
         <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
             <motion.div
@@ -55,19 +57,23 @@ export default function HomePage() {
               className="flex flex-col justify-center space-y-4"
             >
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-foreground">
                   Pozdvihnite svoj štýl s dokonalými nechtami
                 </h1>
-                <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                  Objavte svet krásy a relaxu v Emily Nails. Ponúkame širokú škálu nechtových služieb, aby sme vás
-                  rozmaznali.
+                <p className="max-w-[600px] text-foreground md:text-xl">
+                  Objavte svet krásy a relaxu v Emily Nails. Ponúkame širokú
+                  škálu nechtových služieb, aby sme vás rozmaznali.
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <Button asChild size="lg">
                   <Link href="/reservation">Objednať sa</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="text-black">
+                <Button
+                  asChild
+                  size="lg"
+                  className="text-background bg-foreground hover:bg-foreground/70"
+                >
                   <Link href="/services">Zobraziť služby</Link>
                 </Button>
               </div>
@@ -79,7 +85,7 @@ export default function HomePage() {
               className="relative min-h-[300px] w-full lg:min-h-[400px] xl:min-h-[500px]"
             >
               <Image
-                src="/placeholder.svg?height=500&width=600"
+                src="/nails_01.jpg"
                 width={600}
                 height={500}
                 alt="Interiér nechtového salónu"
@@ -94,9 +100,12 @@ export default function HomePage() {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Naše odporúčané služby</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                Naše odporúčané služby
+              </h2>
               <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Preskúmajte naše najobľúbenejšie a najlepšie hodnotené nechtové procedúry.
+                Preskúmajte naše najobľúbenejšie a najlepšie hodnotené nechtové
+                procedúry.
               </p>
             </div>
           </div>
@@ -122,8 +131,12 @@ export default function HomePage() {
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col justify-between">
                     <div>
-                      <CardTitle className="text-xl font-semibold">{service.name}</CardTitle>
-                      <p className="text-muted-foreground mt-2">{service.description}</p>
+                      <CardTitle className="text-xl font-semibold">
+                        {service.name}
+                      </CardTitle>
+                      <p className="text-muted-foreground mt-2">
+                        {service.description}
+                      </p>
                     </div>
                     <div className="flex items-center justify-between mt-4">
                       <span className="text-lg font-bold">{service.price}</span>
@@ -148,9 +161,12 @@ export default function HomePage() {
             transition={{ duration: 0.6 }}
             className="space-y-2"
           >
-            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Navštívte nás ešte dnes!</h2>
+            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+              Navštívte nás ešte dnes!
+            </h2>
             <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Sme pohodlne umiestnení a pripravení poskytnúť vám výnimočný zážitok z nechtovej starostlivosti.
+              Sme pohodlne umiestnení a pripravení poskytnúť vám výnimočný
+              zážitok z nechtovej starostlivosti.
             </p>
             <div className="grid gap-2 text-sm">
               <div className="flex items-center gap-2">
@@ -177,7 +193,7 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <Image
-              src="/placeholder.svg?height=400&width=600"
+              src="/nails_02.jpg"
               width={600}
               height={400}
               alt="Exteriér nechtového salónu"
@@ -187,5 +203,5 @@ export default function HomePage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

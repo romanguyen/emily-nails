@@ -20,11 +20,11 @@ export function SiteHeader() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 text-nowrap">
+      <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <Link
           href="/"
-          className="flex items-center gap-2 font-bold text-lg"
+          className="flex items-center gap-2 font-bold text-lg pr-4"
           prefetch={false}
         >
           <Sparkles className="h-6 w-6 text-primary" />
@@ -37,7 +37,7 @@ export function SiteHeader() {
               href={link.href}
               className={`text-sm font-medium hover:underline underline-offset-4 ${
                 pathname === link.href
-                  ? "text-primary font-semibold"
+                  ? "text-primary font-semibold underline"
                   : "text-muted-foreground"
               }`}
               prefetch={false}
