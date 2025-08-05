@@ -1,5 +1,6 @@
-import Link from "next/link";
-import { Sparkles, Instagram, Facebook, Twitter } from "lucide-react";
+import Link from "next/link"
+
+import { Sparkles, Instagram, Facebook } from "lucide-react"
 
 export function SiteFooter() {
   return (
