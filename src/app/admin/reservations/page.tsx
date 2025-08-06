@@ -1,25 +1,43 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal, CheckCircle, XCircle, Edit, Trash2, CalendarDays, List } from "lucide-react"
+import { MoreHorizontal, CheckCircle, XCircle, Trash2, CalendarDays, List } from "lucide-react"
 import { motion } from "framer-motion"
 import { AdminReservationCalendar } from "@/components/admin-reservation-calendar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { allReservations } from "@/lib/mock-data" // Import allReservations
 import { isToday, isThisWeek, isThisMonth, parseISO } from "date-fns" // Import date-fns functions
+
+interface Reservation {
+  id: number
+  name: string
+  service: string
+  date: string
+  time: string
+  status: string
+}
 
 export default function ManageReservationsPage() {
   const [viewMode, setViewMode] = useState<"calendar" | "table">("calendar")
   const [filterStatus, setFilterStatus] = useState<string>("all")
   const [filterDateRange, setFilterDateRange] = useState<string>("all") // New state for date range filter
+  const [reservations, setReservations] = useState<Reservation[]>([])
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      const response = await fetch("/api/reservations")
+      const data = await response.json()
+      setReservations(data)
+    }
+    fetchReservations()
+  }, [])
 
   const filteredReservations = useMemo(() => {
-    return allReservations.filter((reservation) => {
+    return reservations.filter((reservation) => {
       const reservationDate = parseISO(reservation.date)
 
       // Filter by status
@@ -41,7 +59,29 @@ export default function ManageReservationsPage() {
 
       return true
     })
-  }, [filterStatus, filterDateRange])
+  }, [reservations, filterStatus, filterDateRange])
+
+  const handleUpdateStatus = async (id: number, status: string) => {
+    const response = await fetch(`/api/reservations/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      }
+    )
+    if (response.ok) {
+      setReservations(reservations.map(r => r.id === id ? { ...r, status } : r))
+    }
+  }
+
+  const handleDelete = async (id: number) => {
+    const response = await fetch(`/api/reservations/${id}`, { method: "DELETE" })
+    if (response.ok) {
+      setReservations(reservations.filter(r => r.id !== id))
+    }
+  }
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
@@ -89,7 +129,7 @@ export default function ManageReservationsPage() {
       </div>
 
       {viewMode === "calendar" ? (
-        <AdminReservationCalendar reservations={allReservations} />
+        <AdminReservationCalendar reservations={reservations} />
       ) : (
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
@@ -144,7 +184,7 @@ export default function ManageReservationsPage() {
                 {filteredReservations.map((reservation) => (
                   <TableRow key={reservation.id}>
                     <TableCell className="font-medium">{reservation.id}</TableCell>
-                    <TableCell>{reservation.client}</TableCell>
+                    <TableCell>{reservation.name}</TableCell>
                     <TableCell>{reservation.service}</TableCell>
                     <TableCell>{reservation.date}</TableCell>
                     <TableCell>{reservation.time}</TableCell>
@@ -160,16 +200,13 @@ export default function ManageReservationsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <Edit className="mr-2 h-4 w-4" /> Upraviť
+                          <DropdownMenuItem onClick={() => handleUpdateStatus(reservation.id, "Confirmed")}>
+                            <CheckCircle className="mr-2 h-4 w-4" /> Potvrdiť
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <CheckCircle className="mr-2 h-4 w-4" /> Označiť ako dokončené
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateStatus(reservation.id, "Cancelled")}>
                             <XCircle className="mr-2 h-4 w-4" /> Zrušiť
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
+                          <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(reservation.id)}>
                             <Trash2 className="mr-2 h-4 w-4" /> Vymazať
                           </DropdownMenuItem>
                         </DropdownMenuContent>

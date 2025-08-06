@@ -1,7 +1,6 @@
 "use client"
 
-import type React from "react"
-
+import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -11,14 +10,28 @@ import { motion } from "framer-motion"
 
 export default function LoginPage() {
   const router = useRouter()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    // In a real app, you'd send credentials to a server here.
-    // For this example, we'll simulate a successful login by setting a cookie
-    // and redirecting.
-    document.cookie = "authenticated=true; path=/; max-age=3600" // Expires in 1 hour
-    router.push("/admin")
+    setError("")
+
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    })
+
+    if (response.ok) {
+      router.push("/admin")
+    } else {
+      const data = await response.json()
+      setError(data.message || "Invalid credentials")
+    }
   }
 
   const fadeInAnimationVariants = {
@@ -51,7 +64,14 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">E-mail</Label>
-              <Input id="email" type="email" placeholder="m@example.com" required />
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
@@ -60,8 +80,15 @@ export default function LoginPage() {
                   Zabudli ste heslo?
                 </a>
               </div>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
+            {error && <p className="text-red-500 text-sm">{error}</p>}
             <Button type="submit" className="w-full">
               Prihlásiť sa
             </Button>

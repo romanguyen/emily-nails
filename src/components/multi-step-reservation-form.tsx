@@ -1,7 +1,5 @@
 "use client";
 
-import type React from "react";
-
 import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,11 +16,18 @@ import { Calendar } from "@/components/ui/calendar";
 import { format, isSameDay, addDays, parseISO } from "date-fns";
 import { CheckCircle } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  allReservations,
-  getAvailableTimeSlots,
-  isDayFullyBooked,
-} from "@/lib/mock-data";
+import { getAvailableTimeSlots, isDayFullyBooked } from "@/lib/time-slots";
+
+interface Reservation {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  service: string;
+  date: string;
+  time: string;
+  notes: string;
+}
 
 interface FormData {
   name: string;
@@ -62,6 +67,16 @@ export function MultiStepReservationForm() {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [serviceDuration, setServiceDuration] = useState<number>(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      const response = await fetch("/api/reservations");
+      const data = await response.json();
+      setReservations(data);
+    };
+    fetchReservations();
+  }, []);
 
   // Update service duration when service changes
   useEffect(() => {
@@ -72,22 +87,22 @@ export function MultiStepReservationForm() {
     if (
       formData.date &&
       formData.time &&
-      !getAvailableTimeSlots(formData.date, allReservations, duration).includes(
+      !getAvailableTimeSlots(formData.date, reservations, duration).includes(
         formData.time,
       )
     ) {
       setFormData((prev) => ({ ...prev, time: "" }));
     }
-  }, [formData.service, formData.date, formData.time]);
+  }, [formData.service, formData.date, formData.time, reservations]);
 
   const availableTimeSlots = useMemo(() => {
     if (!formData.date || !serviceDuration) return [];
     return getAvailableTimeSlots(
       formData.date,
-      allReservations,
+      reservations,
       serviceDuration,
     );
-  }, [formData.date, serviceDuration]);
+  }, [formData.date, serviceDuration, reservations]);
 
   const disabledDates = useMemo(() => {
     const disabled: Date[] = [];
@@ -101,13 +116,13 @@ export function MultiStepReservationForm() {
         disabled.push(checkDate);
       } else if (
         serviceDuration > 0 &&
-        isDayFullyBooked(checkDate, allReservations, serviceDuration)
+        isDayFullyBooked(checkDate, reservations, serviceDuration)
       ) {
         disabled.push(checkDate);
       }
     }
     return disabled;
-  }, [serviceDuration]);
+  }, [serviceDuration, reservations]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -154,13 +169,29 @@ export function MultiStepReservationForm() {
     setCurrentStep((prev) => prev - 1);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real application, you would send formData to your backend here.
-    console.log("Form Submitted:", formData);
-    setIsSubmitted(true);
-    // Optionally, clear form or redirect
-    // setFormData(initialFormData);
+    const response = await fetch("/api/reservations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        service: formData.service,
+        date: formData.date ? format(formData.date, "yyyy-MM-dd") : "",
+        time: formData.time,
+        note: formData.notes,
+      }),
+    });
+
+    if (response.ok) {
+      setIsSubmitted(true);
+    } else {
+      alert("Failed to submit reservation. Please try again.");
+    }
   };
 
   const getServiceLabel = (value: string) => {
@@ -274,7 +305,7 @@ export function MultiStepReservationForm() {
                     disabledDates.some((d) => isSameDay(d, day))
                   }
                   modifiers={{
-                    hasReservations: allReservations.map((res) =>
+                    hasReservations: reservations.map((res) =>
                       parseISO(res.date),
                     ),
                   }}
