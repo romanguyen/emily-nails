@@ -6,15 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { format, isSameDay, parseISO } from "date-fns"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-
-interface Reservation {
-  id: string
-  client: string
-  service: string
-  date: string // YYYY-MM-DD format
-  time: string
-  status: string
-}
+import { Reservation } from "@/types"
 
 interface AdminReservationCalendarProps {
   reservations: Reservation[]

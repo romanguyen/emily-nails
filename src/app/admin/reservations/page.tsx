@@ -1,100 +1,121 @@
-"use client"
+"use client";
 
-import { useState, useMemo, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal, CheckCircle, XCircle, Trash2, CalendarDays, List } from "lucide-react"
-import { motion } from "framer-motion"
-import { AdminReservationCalendar } from "@/components/admin-reservation-calendar"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { isToday, isThisWeek, isThisMonth, parseISO } from "date-fns" // Import date-fns functions
-
-interface Reservation {
-  id: number
-  name: string
-  service: string
-  date: string
-  time: string
-  status: string
-}
+import { useState, useMemo, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  MoreHorizontal,
+  CheckCircle,
+  Trash2,
+  CalendarDays,
+  List,
+} from "lucide-react";
+import { motion } from "framer-motion";
+import { AdminReservationCalendar } from "@/components/admin-reservation-calendar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { isToday, isThisWeek, isThisMonth, parseISO } from "date-fns"; // Import date-fns functions
+import { Reservation } from "@/types";
 
 export default function ManageReservationsPage() {
-  const [viewMode, setViewMode] = useState<"calendar" | "table">("calendar")
-  const [filterStatus, setFilterStatus] = useState<string>("all")
-  const [filterDateRange, setFilterDateRange] = useState<string>("all") // New state for date range filter
-  const [reservations, setReservations] = useState<Reservation[]>([])
+  const [viewMode, setViewMode] = useState<"calendar" | "table">("calendar");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [filterDateRange, setFilterDateRange] = useState<string>("all"); // New state for date range filter
+  const [reservations, setReservations] = useState<Reservation[]>([]);
 
   useEffect(() => {
     const fetchReservations = async () => {
-      const response = await fetch("/api/reservations")
-      const data = await response.json()
-      setReservations(data)
-    }
-    fetchReservations()
-  }, [])
+      const response = await fetch("/api/reservations");
+      const data = await response.json();
+      setReservations(data);
+    };
+    fetchReservations();
+  }, []);
 
   const filteredReservations = useMemo(() => {
     return reservations.filter((reservation) => {
-      const reservationDate = parseISO(reservation.date)
+      const reservationDate = parseISO(reservation.date);
 
       // Filter by status
       if (filterStatus !== "all" && reservation.status !== filterStatus) {
-        return false
+        return false;
       }
 
       // Filter by date range
       if (filterDateRange === "today" && !isToday(reservationDate)) {
-        return false
+        return false;
       }
-      if (filterDateRange === "this-week" && !isThisWeek(reservationDate, { weekStartsOn: 1 })) {
+      if (
+        filterDateRange === "this-week" &&
+        !isThisWeek(reservationDate, { weekStartsOn: 1 })
+      ) {
         // Monday as start of week
-        return false
+        return false;
       }
       if (filterDateRange === "this-month" && !isThisMonth(reservationDate)) {
-        return false
+        return false;
       }
 
-      return true
-    })
-  }, [reservations, filterStatus, filterDateRange])
+      return true;
+    });
+  }, [reservations, filterStatus, filterDateRange]);
 
-  const handleUpdateStatus = async (id: number, status: string) => {
-    const response = await fetch(`/api/reservations/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status }),
-      }
-    )
+  const handleUpdateStatus = async (id: string, status: string) => {
+    const response = await fetch(`/api/reservations/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    });
     if (response.ok) {
-      setReservations(reservations.map(r => r.id === id ? { ...r, status } : r))
+      setReservations(
+        reservations.map((r) => (r.id === id ? { ...r, status } : r)),
+      );
     }
-  }
+  };
 
-  const handleDelete = async (id: number) => {
-    const response = await fetch(`/api/reservations/${id}`, { method: "DELETE" })
+  const handleDelete = async (id: string) => {
+    const response = await fetch(`/api/reservations/${id}`, {
+      method: "DELETE",
+    });
     if (response.ok) {
-      setReservations(reservations.filter(r => r.id !== id))
+      setReservations(reservations.filter((r) => r.id !== id));
     }
-  }
+  };
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
       case "Confirmed":
-        return "default"
+        return "default";
       case "Pending":
-        return "outline"
+        return "outline";
       case "Cancelled":
-        return "destructive"
+        return "destructive";
       default:
-        return "secondary"
+        return "secondary";
     }
-  }
+  };
 
   const fadeInAnimationVariants = {
     initial: {
@@ -108,10 +129,15 @@ export default function ManageReservationsPage() {
         delay: 0.1,
       },
     },
-  }
+  };
 
   return (
-    <motion.div variants={fadeInAnimationVariants} initial="initial" animate="animate" className="grid gap-6">
+    <motion.div
+      variants={fadeInAnimationVariants}
+      initial="initial"
+      animate="animate"
+      className="grid gap-6"
+    >
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Spravovať rezervácie</h1>
         <div className="flex gap-2">
@@ -122,7 +148,11 @@ export default function ManageReservationsPage() {
           >
             <CalendarDays className="h-4 w-4 mr-2" /> Kalendár
           </Button>
-          <Button variant={viewMode === "table" ? "default" : "outline"} size="sm" onClick={() => setViewMode("table")}>
+          <Button
+            variant={viewMode === "table" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("table")}
+          >
             <List className="h-4 w-4 mr-2" /> Tabuľka
           </Button>
         </div>
@@ -138,7 +168,9 @@ export default function ManageReservationsPage() {
               {" "}
               {/* Increased gap */}
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Filter podľa stavu:</span>
+                <span className="text-sm text-muted-foreground">
+                  Filter podľa stavu:
+                </span>
                 <Select onValueChange={setFilterStatus} defaultValue="all">
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Všetky stavy" />
@@ -152,7 +184,9 @@ export default function ManageReservationsPage() {
                 </Select>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Filter podľa dátumu:</span>
+                <span className="text-sm text-muted-foreground">
+                  Filter podľa dátumu:
+                </span>
                 <Select onValueChange={setFilterDateRange} defaultValue="all">
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Všetky dátumy" />
@@ -183,13 +217,19 @@ export default function ManageReservationsPage() {
               <TableBody>
                 {filteredReservations.map((reservation) => (
                   <TableRow key={reservation.id}>
-                    <TableCell className="font-medium">{reservation.id}</TableCell>
+                    <TableCell className="font-medium">
+                      {reservation.id}
+                    </TableCell>
                     <TableCell>{reservation.name}</TableCell>
                     <TableCell>{reservation.service}</TableCell>
                     <TableCell>{reservation.date}</TableCell>
                     <TableCell>{reservation.time}</TableCell>
                     <TableCell>
-                      <Badge variant={getStatusBadgeVariant(reservation.status)}>{reservation.status}</Badge>
+                      <Badge
+                        variant={getStatusBadgeVariant(reservation.status)}
+                      >
+                        {reservation.status}
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
@@ -200,13 +240,17 @@ export default function ManageReservationsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleUpdateStatus(reservation.id, "Confirmed")}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              handleUpdateStatus(reservation.id, "Confirmed")
+                            }
+                          >
                             <CheckCircle className="mr-2 h-4 w-4" /> Potvrdiť
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleUpdateStatus(reservation.id, "Cancelled")}>
-                            <XCircle className="mr-2 h-4 w-4" /> Zrušiť
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(reservation.id)}>
+                          <DropdownMenuItem
+                            className="text-red-600"
+                            onClick={() => handleDelete(reservation.id)}
+                          >
                             <Trash2 className="mr-2 h-4 w-4" /> Vymazať
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -220,5 +264,5 @@ export default function ManageReservationsPage() {
         </Card>
       )}
     </motion.div>
-  )
+  );
 }
